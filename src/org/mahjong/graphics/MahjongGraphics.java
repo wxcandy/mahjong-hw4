@@ -11,11 +11,13 @@ import org.mahjong.client.MahjongPresenter.View;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.dom.client.AudioElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -24,13 +26,44 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.animation.client.Animation;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.media.client.Audio;
+import com.google.gwt.user.client.ui.HTMLTable.CellFormatter;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.event.shared.GwtEvent.Type;
+
+import com.allen_sauer.gwt.dnd.client.DragEndEvent;
+import com.allen_sauer.gwt.dnd.client.DragHandler;
+import com.allen_sauer.gwt.dnd.client.DragContext;
+import com.allen_sauer.gwt.dnd.client.DragStartEvent;
+import com.allen_sauer.gwt.dnd.client.PickupDragController;
+import com.allen_sauer.gwt.dnd.client.drop.SimpleDropController;
+import com.allen_sauer.gwt.dnd.client.VetoDragException;
+
 import com.google.common.collect.Iterables;
 
+
 public class MahjongGraphics extends Composite implements View{
+	
 	public interface MahjongGraphicsUiBinder extends UiBinder<Widget, MahjongGraphics> {
 		
 	}
+
 	
+//for producing animation
+	@UiField
+	FlexTable animationArea;
+	
+	@UiField
+	Button pieceMoving;
+	
+	@UiField
+	Button dndMoving;
 
 //for test
 	@UiField
@@ -103,8 +136,6 @@ public class MahjongGraphics extends Composite implements View{
 	@UiField
 	HorizontalPanel specialTileArea;
 	
-
-	
 	private boolean enableClickForChi = false;
 	private boolean enableClickForPeng = false;
 	private boolean enableClickForGang = false;
@@ -113,12 +144,262 @@ public class MahjongGraphics extends Composite implements View{
 	private final TileImageSupplier tileImageSupplier;
 	private MahjongPresenter presenter;
 	
+	private boolean choosed = false;
+	
 	public MahjongGraphics() {
 		TileImages tileImages = GWT.create(TileImages.class);
+		final AnimationIngredients ai = GWT.create(AnimationIngredients.class);
 		this.tileImageSupplier = new TileImageSupplier(tileImages);
+		
 		MahjongGraphicsUiBinder uiBinder = GWT.create(MahjongGraphicsUiBinder.class);
 		initWidget(uiBinder.createAndBindUi(this));
+
+		initializePieceMoving(ai);
+		
+		pieceMoving.addClickHandler(new ClickHandler() {
+		  @Override
+		  public void onClick(ClickEvent event) {
+		    initializePieceMoving(ai);
+		  }
+		});
+		
+		dndMoving.addClickHandler(new ClickHandler() {
+		  @Override
+		  public void onClick(ClickEvent event) {
+			HTML eventTextArea = new HTML();
+			eventTextArea.setSize("80px", "120px");
+		    initializeDNDMoving(new PlainDragHandler(eventTextArea), ai);
+		  }
+		});
 	}
+
+	private class PlainDragHandler implements DragHandler {
+	  public static final String BLUE = "#4444BB";
+	  public static final String GREEN = "#44BB44";
+	  public static final String RED = "#BB4444";
+	  private final HTML eventTextArea;
+	  
+	  public PlainDragHandler(HTML eventTextArea) {
+	    this.eventTextArea = eventTextArea;
+	  }
+	  
+	  @Override
+	  public void onDragEnd(DragEndEvent event) {
+	    log("onDragEnd:" + event, RED);
+	  }
+	  
+	  @Override
+	  public void onDragStart(DragStartEvent event) {
+		log("onDragStart:" + event, GREEN);
+	  }
+	  
+	  @Override
+	  public void onPreviewDragEnd(DragEndEvent event) throws VetoDragException{
+	    log("<br>onPreviewDragEnd: " + event, BLUE);
+	  }
+	  
+	  @Override
+	  public void onPreviewDragStart(DragStartEvent event) throws VetoDragException{
+	    log("<br>onPreviewDragStart: " + event, BLUE);
+	  }
+	  
+	  public void clear() {
+	    eventTextArea.setHTML("");
+	  }
+	  
+	  public void log(String text, String color) {
+	    eventTextArea.setHTML(eventTextArea.getHTML()
+	        + (eventTextArea.getHTML().length() == 0 ? "" : "<br>") + "<span style='color: " + color
+	        + "'>" + text + "</span>");
+	  }
+	}
+	
+	public class SetWidgetDropController extends SimpleDropController{
+		
+		private final SimplePanel dropTarget;
+
+		public SetWidgetDropController(SimplePanel dropTarget) {
+		  super(dropTarget);
+		  this.dropTarget = dropTarget;
+		}
+		
+		@Override
+		public void onDrop(DragContext context) {
+		  Window.alert("KKKKKKK");
+		  dropTarget.setWidget(context.draggable);
+		  super.onDrop(context);
+		}
+		
+		@Override
+		public void onPreviewDrop(DragContext context) throws VetoDragException {
+		  Window.alert("QQQQQQQQQQQ");
+		  if(dropTarget.getWidget() != null) {
+		    throw new VetoDragException();
+		  }
+		  super.onPreviewDrop(context);
+		}
+	}
+	
+	private void initializePieceMoving(final AnimationIngredients ai) {
+		  animationArea.clear();
+		  final Image windEast = new Image(ai.windEast());
+		  windEast.addClickHandler(new ClickHandler() {
+		    @Override
+		    public void onClick(ClickEvent event) {
+			  choosed = true;
+			}
+		  });
+		  final int width = windEast.getWidth();
+		  final int height = windEast.getHeight();
+		  
+		  animationArea.setBorderWidth(1);
+		  
+		  CellFormatter cf = animationArea.getCellFormatter();
+		  
+		  for(int i=0; i<5; i++) {
+		    for(int j=0; j<5; j++) {
+		      cf.setWidth(i, j, "100px");
+		      cf.setHeight(i, j, "140px");
+		      final SimplePanel simplePanel = new SimplePanel();
+		      simplePanel.setPixelSize(width, height);
+		      animationArea.setWidget(i, j, simplePanel);
+		      
+		      final Image empty = new Image(ai.empty());
+		      empty.setPixelSize(width, height);
+		      
+		      simplePanel.add(empty);
+		      
+		      empty.addClickHandler(new ClickHandler() {
+		          @Override
+		          public void onClick(ClickEvent event) {
+		            if(choosed) {
+		          	Audio audio = Audio.createIfSupported();
+		          	audio.addSource(ai.initialSound().getSafeUri().asString(), AudioElement.TYPE_MP3);
+		            Animation animation = 
+		            		  new PieceMovingAnimation(windEast, empty, 
+		            				  ai.windEast(), ai.empty(), audio, ai.empty(), width, height);
+		            animation.run(1000);
+		          }
+		            choosed = false;
+		        }
+		      });
+		          
+		      if(i==0 && j==0) {
+		        simplePanel.setWidget(windEast);
+		      }
+		    }
+		 }	  
+	  }
+	
+	private void initializeDNDMoving(PlainDragHandler plainDragHandler, final AnimationIngredients ai) {
+		animationArea.clear();
+		animationArea.setBorderWidth(1);
+		
+		final PickupDragController dragController;
+		  
+		final Image windEast = new Image(ai.windEast()); 
+		final int width = windEast.getWidth();
+		final int height = windEast.getHeight();
+		  
+		dragController = new PickupDragController(RootPanel.get(), false);
+		dragController.addDragHandler(plainDragHandler);
+		dragController.setBehaviorMultipleSelection(false);
+		  
+	    dragController.makeDraggable(windEast);
+		  
+		 CellFormatter cf = animationArea.getCellFormatter();
+		  
+		  for(int i=0; i<5; i++) {
+		    for(int j=0; j<5; j++) {
+		      cf.setWidth(i, j, "100px");
+		      cf.setHeight(i, j, "140px");
+		      final SimplePanel simplePanel = new SimplePanel();
+		      simplePanel.setPixelSize(width, height);
+		      animationArea.setWidget(i, j, simplePanel);
+		          
+		      if(i==0 && j==0) {
+		        simplePanel.setWidget(windEast);
+		      }
+		      
+		      SetWidgetDropController dropController = new SetWidgetDropController(simplePanel);
+		      dragController.registerDropController(dropController);
+		    }
+		 }	 
+	Window.alert("OKOKOK");
+	}
+	
+	public class PieceMovingAnimation extends Animation {
+		
+        Image start, end, moving;
+        ImageResource piece;
+        int startX, startY, startWidth, startHeight;
+        RootPanel panel;
+        int endX, endY;
+        Audio soundAtEnd;
+        boolean cancelled;
+
+        public PieceMovingAnimation(Image startImg,
+        		        Image endImg,
+                        ImageResource startImgRes,
+                        ImageResource endImgRes,
+                        Audio sfx, 
+                        ImageResource blankImgRes,
+                        int width,
+                        int height
+                        ) {
+        	
+                start = startImg;
+                end = endImg;
+                piece = startImgRes;
+                
+                panel = RootPanel.get();
+                
+                startX = start.getAbsoluteLeft();
+                startY = start.getAbsoluteTop();
+                
+                startWidth = width;
+                startHeight = height;
+                
+                endX = end.getAbsoluteLeft();
+                endY = end.getAbsoluteTop();
+                
+                soundAtEnd = sfx;
+                cancelled = false;
+
+                moving = start;
+                moving.setPixelSize(startWidth, startHeight);    
+        }
+
+        @Override
+        protected void onUpdate(double progress) {
+          int x = (int) (startX + (endX - startX) * progress);
+          int y = (int) (startY + (endY - startY) * progress);
+          double scale = 1 + 0.5 * Math.sin(progress * Math.PI);
+          int width = (int) (startWidth * scale);
+          int height = (int) (startHeight * scale);
+          moving.setPixelSize(width, height);
+          x -= (width - startWidth) / 2;
+          y -= (height - startHeight) / 2;
+
+          panel.remove(moving);
+          panel.add(moving, x, y);
+        }
+
+        @Override
+        protected void onCancel() {
+          cancelled = true;
+          panel.remove(moving);
+        }
+
+        @Override
+        protected void onComplete() {
+          if (!cancelled) {
+            if (soundAtEnd != null)
+              soundAtEnd.play();
+            }
+        }
+    }
+
 	
 	@Override
 	public void setPresenter(MahjongPresenter mahjongPresenter) {

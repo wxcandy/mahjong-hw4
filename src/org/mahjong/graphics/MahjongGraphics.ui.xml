@@ -57,15 +57,36 @@
         <g:VerticalPanel width="100px" ui:field="leftCastArea"/>
       </g:HorizontalPanel>
       
-      <g:HorizontalPanel width="1360px">
-          <g:HorizontalPanel height="600px"/>
-          <g:HorizontalPanel height="160px">
+      <g:VerticalPanel width="1360px" height="1360px">
+       <!--  <g:HorizontalPanel height="600px"/> -->
+          <g:HorizontalPanel height="500px" width="1360px">
             <g:HorizontalPanel width="600px"/>
             <g:HorizontalPanel width="160px" ui:field="specialTileArea"/>
             <g:HorizontalPanel width="600px"/>
           </g:HorizontalPanel>
-          <g:HorizontalPanel height="600px"/>
-      </g:HorizontalPanel>
+        <!--  <g:HorizontalPanel height="600px"/> -->
+        <g:HorizontalPanel height="700px" width="1360px">
+          <g:HorizontalPanel height="700px" width="430px"/>
+          <g:FlexTable height="700px" width="500px" ui:field="animationArea"/>
+          <g:HorizontalPanel height="700px" width="430px"/>
+        </g:HorizontalPanel>
+        
+        <g:HorizontalPanel height="60px"/>
+        
+        <g:HorizontalPanel height="100px" width="1360px">
+          <g:HorizontalPanel height="100px" width="530px"/>
+          
+          <g:HorizontalPanel height="100px" width="150px">
+          <g:Button ui:field="pieceMoving" height="50px" width="80px" text="Piece Moving"/>
+          </g:HorizontalPanel>
+          
+          <g:HorizontalPanel height="100px" width="150px">
+          <g:Button ui:field="dndMoving" height="50px" width="80px" text="DND Moving"/>
+          </g:HorizontalPanel>
+          
+          <g:HorizontalPanel height="100px" width="530px"/>
+        </g:HorizontalPanel>
+      </g:VerticalPanel>
       
       
       
