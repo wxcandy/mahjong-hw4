@@ -21,6 +21,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -64,26 +65,6 @@ public class MahjongGraphics extends Composite implements View{
 	
 	@UiField
 	Button dndMoving;
-
-//for test
-	@UiField
-	HorizontalPanel testArea1;
-
-//for test
-	@UiField
-	HorizontalPanel testArea2;
-	
-//for test
-	@UiField
-	HorizontalPanel testArea3;
-	
-//for test
-	@UiField
-	HorizontalPanel testArea4;
-
-//for test
-	@UiField
-	HorizontalPanel testArea5;
 	
 
 	@UiField
@@ -154,6 +135,9 @@ public class MahjongGraphics extends Composite implements View{
 		MahjongGraphicsUiBinder uiBinder = GWT.create(MahjongGraphicsUiBinder.class);
 		initWidget(uiBinder.createAndBindUi(this));
 
+		upHandArea.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		upWallArea.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		
 		initializePieceMoving(ai);
 		
 		pieceMoving.addClickHandler(new ClickHandler() {
@@ -162,15 +146,17 @@ public class MahjongGraphics extends Composite implements View{
 		    initializePieceMoving(ai);
 		  }
 		});
-		
+
+
 		dndMoving.addClickHandler(new ClickHandler() {
 		  @Override
 		  public void onClick(ClickEvent event) {
 			HTML eventTextArea = new HTML();
-			eventTextArea.setSize("80px", "120px");
+			eventTextArea.setSize("16px", "24px");
 		    initializeDNDMoving(new PlainDragHandler(eventTextArea), ai);
 		  }
 		});
+
 	}
 
 	private class PlainDragHandler implements DragHandler {
@@ -213,7 +199,7 @@ public class MahjongGraphics extends Composite implements View{
 	        + "'>" + text + "</span>");
 	  }
 	}
-	
+
 	public class SetWidgetDropController extends SimpleDropController{
 		
 		private final SimplePanel dropTarget;
@@ -225,32 +211,30 @@ public class MahjongGraphics extends Composite implements View{
 		
 		@Override
 		public void onDrop(DragContext context) {
-		  Window.alert("KKKKKKK");
 		  dropTarget.setWidget(context.draggable);
 		  super.onDrop(context);
 		}
 		
 		@Override
 		public void onPreviewDrop(DragContext context) throws VetoDragException {
-		  Window.alert("QQQQQQQQQQQ");
 		  if(dropTarget.getWidget() != null) {
 		    throw new VetoDragException();
 		  }
 		  super.onPreviewDrop(context);
 		}
 	}
-	
 	private void initializePieceMoving(final AnimationIngredients ai) {
 		  animationArea.clear();
 		  final Image windEast = new Image(ai.windEast());
+		  windEast.setStyleName("image2");
 		  windEast.addClickHandler(new ClickHandler() {
 		    @Override
 		    public void onClick(ClickEvent event) {
 			  choosed = true;
 			}
 		  });
-		  final int width = windEast.getWidth();
-		  final int height = windEast.getHeight();
+		  final int width = 29;
+		  final int height = 30;
 		  
 		  animationArea.setBorderWidth(1);
 		  
@@ -258,8 +242,8 @@ public class MahjongGraphics extends Composite implements View{
 		  
 		  for(int i=0; i<5; i++) {
 		    for(int j=0; j<5; j++) {
-		      cf.setWidth(i, j, "100px");
-		      cf.setHeight(i, j, "140px");
+		      cf.setWidth(i, j, "29px");
+		      cf.setHeight(i, j, "30px");
 		      final SimplePanel simplePanel = new SimplePanel();
 		      simplePanel.setPixelSize(width, height);
 		      animationArea.setWidget(i, j, simplePanel);
@@ -298,8 +282,9 @@ public class MahjongGraphics extends Composite implements View{
 		final PickupDragController dragController;
 		  
 		final Image windEast = new Image(ai.windEast()); 
-		final int width = windEast.getWidth();
-		final int height = windEast.getHeight();
+		windEast.setStyleName("image2");
+		final int width = 29;
+		final int height = 30;
 		  
 		dragController = new PickupDragController(RootPanel.get(), false);
 		dragController.addDragHandler(plainDragHandler);
@@ -311,8 +296,8 @@ public class MahjongGraphics extends Composite implements View{
 		  
 		  for(int i=0; i<5; i++) {
 		    for(int j=0; j<5; j++) {
-		      cf.setWidth(i, j, "100px");
-		      cf.setHeight(i, j, "140px");
+		      cf.setWidth(i, j, "29px");
+		      cf.setHeight(i, j, "30px");
 		      final SimplePanel simplePanel = new SimplePanel();
 		      simplePanel.setPixelSize(width, height);
 		      animationArea.setWidget(i, j, simplePanel);
@@ -325,7 +310,6 @@ public class MahjongGraphics extends Composite implements View{
 		      dragController.registerDropController(dropController);
 		    }
 		 }	 
-	Window.alert("OKOKOK");
 	}
 	
 	public class PieceMovingAnimation extends Animation {
@@ -555,8 +539,8 @@ public class MahjongGraphics extends Composite implements View{
 		panel.clear();
 		for (Image image : images) {
 			FlowPanel imageContainer = new FlowPanel();
-			imageContainer.setWidth("80px");
-			imageContainer.setHeight("100px");
+			imageContainer.setStyleName("imgContainerUp");
+			image.setStyleName("image");
 			imageContainer.add(image);
 			panel.add(imageContainer);
 		}
@@ -566,8 +550,8 @@ public class MahjongGraphics extends Composite implements View{
 		panel.clear();
 		for (Image image : images) {
 			FlowPanel imageContainer = new FlowPanel();
-			imageContainer.setWidth("80px");
-			imageContainer.setHeight("100px");
+			imageContainer.setStyleName("imgContainerUp");
+			image.setStyleName("image");
 			imageContainer.add(image);
 			panel.add(imageContainer);
 		}
@@ -577,8 +561,8 @@ public class MahjongGraphics extends Composite implements View{
 		panel.clear();
 		for (Image image : images) {
 			FlowPanel imageContainer = new FlowPanel();
-			imageContainer.setWidth("100px");
-			imageContainer.setHeight("80px");
+			imageContainer.setStyleName("imgContainerLeft");
+			image.setStyleName("image");
 			imageContainer.add(image);
 			panel.add(imageContainer);
 		}
@@ -588,8 +572,8 @@ public class MahjongGraphics extends Composite implements View{
 		if(flagForSpecialTile) return;	
 		else {
 			FlowPanel imgContainer = new FlowPanel();
-			imgContainer.setWidth("120px");
-			imgContainer.setHeight("140px");
+			imgContainer.setStyleName("imgContainerSpec");
+            image.setStyleName("image");
 			imgContainer.add(image);
 			panel.add(imgContainer);
 			flagForSpecialTile = true;
@@ -651,53 +635,6 @@ public class MahjongGraphics extends Composite implements View{
 		alertMahjongMessage(mahjongMessage);
 
 	}
-	
-
-	//for Test
-	@Override
-	public void testButton1(String str) { 
-		//testArea1.clear();
-		FlowPanel containerPanel = new FlowPanel();
-		containerPanel.add(new Button("" + str));
-		testArea1.add(containerPanel);
-	}
-	
-	//for Test
-	@Override
-	public void testButton2() { 
-		//testArea2.clear();
-		FlowPanel containerPanel = new FlowPanel();
-		containerPanel.add(new Button("Test2"));
-		testArea2.add(containerPanel);
-	}
-	
-	//for Test
-	@Override
-	public void testButton3() { 
-		//testArea3.clear();
-		FlowPanel containerPanel = new FlowPanel();
-		containerPanel.add(new Button("Test3"));
-		testArea3.add(containerPanel);
-	}
-	
-	//for Test
-	@Override
-	public void testButton4() { 
-		//testArea4.clear();
-		FlowPanel containerPanel = new FlowPanel();
-		containerPanel.add(new Button("Test4"));
-		testArea4.add(containerPanel);
-	}
-	
-	//for Test
-	@Override
-	public void testButton5() { 
-		//testArea5.clear();
-		FlowPanel containerPanel = new FlowPanel();
-		containerPanel.add(new Button("Test5"));
-		testArea5.add(containerPanel);
-	}
-
 	
 	
 	@Override

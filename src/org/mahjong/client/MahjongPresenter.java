@@ -109,13 +109,6 @@ public class MahjongPresenter {
 		
 		public void chooseChiTiles(List<Tile> selectedChiTiles, List<Tile> remainingTiles,
 				List<Integer> selectedChiTileIndexes, List<Integer> remainingTileIndexes);
-		
-		//for test
-		public void testButton1(String str);
-		public void testButton2();
-		public void testButton3();
-		public void testButton4();
-		public void testButton5();
 	}
 	
 	private final MahjongLogic mahjongLogic = new MahjongLogic();
