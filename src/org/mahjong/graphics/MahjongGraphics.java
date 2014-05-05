@@ -68,6 +68,9 @@ public class MahjongGraphics extends Composite implements View{
 	
 
 	@UiField
+	AbsolutePanel absolutePanel;
+	
+	@UiField
 	VerticalPanel leftHandArea;	
 	@UiField
 	VerticalPanel leftMeldArea;
@@ -137,6 +140,8 @@ public class MahjongGraphics extends Composite implements View{
 
 		upHandArea.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		upWallArea.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		
+		absolutePanel.setPixelSize(580, 580);
 		
 		initializePieceMoving(ai);
 		

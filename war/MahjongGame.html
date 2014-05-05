@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title>Mahjong Game</title>
     <script type="text/javascript" language="javascript" src="mahjong_game/mahjong_game.nocache.js"></script>
@@ -30,5 +30,31 @@
   </head>
   <body>
     <div id="mainDiv" width="40" height="50" ></div>
+    <script>
+   function scaleBody() {
+   var myGameWidth = 460;
+   var myGameHeight = 920;
+   var scaleX = window.innerWidth / myGameWidth;
+   var scaleY = window.innerHeight / myGameHeight;
+   var scale = Math.max(scaleX, scaleY);
+   var transformString = "scale(" + scale + "," + scale + ")";
+   document.body.style.transform = transformString;
+   document.body.style['-o-transform'] = transformString;
+   document.body.style['-webkit-transform'] = transformString;
+   document.body.style['-moz-transform'] = transformString;
+   document.body.style['-ms-transform'] = transformString;
+   var transformOriginString = "0 0 0";
+   document.body.style['transform-origin'] = transformOriginString;
+   document.body.style['-o-transform-origin'] = transformOriginString;
+   document.body.style['-webkit-transform-origin'] = transformOriginString;
+   document.body.style['-moz-transform-origin'] = transformOriginString;
+   document.body.style['-ms-transform-origin'] = transformOriginString;
+ }
+ window.onresize = scaleBody;
+ window.onorientationchange = scaleBody;
+ document.addEventListener("orientationchange", scaleBody);
+ scaleBody();
+ </script>
+    
   </body>
 </html>

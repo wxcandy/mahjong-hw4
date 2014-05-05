@@ -17,6 +17,7 @@
   </g:HorizontalPanel>
  -->
 
+<g:AbsolutePanel ui:field = "absolutePanel">
   <g:VerticalPanel height="472px" width="472px">
   
   
@@ -142,4 +143,5 @@
     
     
   </g:VerticalPanel>
+  </g:AbsolutePanel>
 </ui:UiBinder>
