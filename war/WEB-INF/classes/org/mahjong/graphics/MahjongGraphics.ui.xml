@@ -74,11 +74,11 @@
           <g:HorizontalPanel height="20px" width="106px"/>
           
           <g:HorizontalPanel height="20px" width="30px">
-          <g:Button ui:field="pieceMoving" height="25px" width="50px" text="Piece"/>
+          <!--<g:Button ui:field="pieceMoving" height="25px" width="50px" text="Piece"/>-->
           </g:HorizontalPanel>
           
           <g:HorizontalPanel height="20px" width="30px">
-          <g:Button ui:field="dndMoving" height="25px" width="50px" text="DND"/>
+          <!--<g:Button ui:field="dndMoving" height="25px" width="50px" text="DND"/>-->
           </g:HorizontalPanel>
           
           <g:HorizontalPanel height="20px" width="106px"/>

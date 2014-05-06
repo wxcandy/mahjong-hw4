@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 
+import com.google.gwt.user.client.Window;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
@@ -110,8 +112,11 @@ public final class GameApi {
     public IteratingPlayerContainer(Game game, int numberOfPlayers) {
       this.game = game;
       List<String> playerIds = Lists.newArrayList();
-      for (int i = 0; i < numberOfPlayers; i++) {
-        String playerId = String.valueOf(42 + i);
+      String playerId = "420";
+      playerIds.add(playerId);
+      playersInfo.add(ImmutableMap.<String, Object>of(PLAYER_ID, playerId));
+      for (int i = 1; i < numberOfPlayers; i++) {
+        playerId = String.valueOf("10" + i);
         playerIds.add(playerId);
         playersInfo.add(ImmutableMap.<String, Object>of(PLAYER_ID, playerId));
       }
@@ -396,8 +401,12 @@ public final class GameApi {
       return yourPlayerId;
     }
 
+//  public boolean isAiPlayer() {
+//      return yourPlayerId.equals(AI_PLAYER_ID);
+//  }
+    
     public boolean isAiPlayer() {
-      return yourPlayerId.equals(AI_PLAYER_ID);
+      return yourPlayerId.equals("101") || yourPlayerId.equals("102") || yourPlayerId.equals("103");
     }
 
     public boolean isViewer() {

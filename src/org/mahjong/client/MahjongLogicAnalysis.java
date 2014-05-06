@@ -57,7 +57,7 @@ public class MahjongLogicAnalysis {
 		return false;
 	}
 	
-	private static boolean isSpecialTile(Tile tile, Tile specialTile) {
+	public static boolean isSpecialTile(Tile tile, Tile specialTile) {
 		if(tile.equals(specialTile)) return true;
 		if(tile.getDomain() != specialTile.getDomain()) return false;
 		if(tile.getDomain() != 3){

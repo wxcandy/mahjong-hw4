@@ -2,7 +2,10 @@ package org.mahjong.graphics;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
+import org.mahjong.client.MahjongLogicAnalysis;
+import org.mahjong.client.Cast;
 import org.mahjong.client.Tile;
 import org.mahjong.client.MahjongPresenter;
 import org.mahjong.client.MahjongPresenter.MahjongMessage;
@@ -60,11 +63,11 @@ public class MahjongGraphics extends Composite implements View{
 	@UiField
 	FlexTable animationArea;
 	
-	@UiField
-	Button pieceMoving;
+	//@UiField
+	//Button pieceMoving;
 	
-	@UiField
-	Button dndMoving;
+	//@UiField
+	//Button dndMoving;
 	
 
 	@UiField
@@ -143,8 +146,9 @@ public class MahjongGraphics extends Composite implements View{
 		
 		absolutePanel.setPixelSize(580, 580);
 		
-		initializePieceMoving(ai);
+		//initializePieceMoving(ai);
 		
+		/*
 		pieceMoving.addClickHandler(new ClickHandler() {
 		  @Override
 		  public void onClick(ClickEvent event) {
@@ -161,6 +165,7 @@ public class MahjongGraphics extends Composite implements View{
 		    initializeDNDMoving(new PlainDragHandler(eventTextArea), ai);
 		  }
 		});
+		*/
 
 	}
 
@@ -504,12 +509,12 @@ public class MahjongGraphics extends Composite implements View{
 		return image;
 	}
 	
-	public List<Image> createTilesImages(List<Tile> myTiles) {
+	public List<Image> createTilesImages(List<Tile> myTiles, boolean canClick) {
 		List<TileImage> images = Lists.newArrayList();
 		for(Tile tile : myTiles) {
 			images.add(TileImage.Factory.getPositiveDown(tile));
 		}
-		return createImages(images, true);
+		return createImages(images, canClick);
 	}
 	
 	private List<Image> createImages(List<TileImage> images, boolean withClick) {
@@ -637,7 +642,7 @@ public class MahjongGraphics extends Composite implements View{
 		if(specialTile!=null && !flagForSpecialTile)
 		placeSpecialTile(specialTileArea, turnTileToImage(specialTile));
 		
-		alertMahjongMessage(mahjongMessage);
+		alertMahjongMessage(mahjongMessage, false);
 
 	}
 	
@@ -678,7 +683,7 @@ public class MahjongGraphics extends Composite implements View{
 	    
 	    
 	    Collections.sort(myTiles);
-		placeImages1(downHandArea, createTilesImages(myTiles));
+		placeImages1(downHandArea, createTilesImages(myTiles, true));
 		placeImages1(downWallArea, createWallTiles(myWallNumber, 1));
 		placeImages1(downMeldArea, createMeldTiles(myChiTiles,myPengTiles,myGangTiles, 0));
 
@@ -714,10 +719,84 @@ public class MahjongGraphics extends Composite implements View{
 		skipButton.setEnabled(false);
 		
 		
-		alertMahjongMessage(mahjongMessage);
+		alertMahjongMessage(mahjongMessage, false);
 	}
 	
-	private void alertMahjongMessage(MahjongMessage mahjongMessage) {
+	@Override
+	public void setPlayerStateAi(
+			int tileNumberOfOpponent1, 
+			List<Tile> chiTilesOfOpponent1,
+			List<Tile> pengTilesOfOpponent1,
+			List<Tile> gangTilesOfOpponent1,
+			List<Tile> castTilesOfOpponent1,
+			List<Integer> wallNumberOfOpponent1, 
+			int tileNumberOfOpponent2, 
+			List<Tile> chiTilesOfOpponent2,
+			List<Tile> pengTilesOfOpponent2,
+			List<Tile> gangTilesOfOpponent2,
+			List<Tile> castTilesOfOpponent2,
+		    List<Integer> wallNumberOfOpponent2, 
+			int tileNumberOfOpponent3,
+			List<Tile> chiTilesOfOpponent3,
+			List<Tile> pengTilesOfOpponent3,
+			List<Tile> gangTilesOfOpponent3,
+			List<Tile> castTilesOfOpponent3,
+		    List<Integer> wallNumberOfOpponent3,
+			List<Tile> myTiles,
+			List<Tile> myChiTiles,
+			List<Tile> myPengTiles,
+			List<Tile> myGangTiles,
+			List<Tile> myCastTiles,
+			List<Integer> myWallNumber,
+			Tile specialTile,
+			List<Integer> myTilesIndexes,
+			MahjongMessage mahjongMessage) {
+	
+	    for(int i=0;i<myTilesIndexes.size();i++) {
+	    	myTiles.get(i).setIndex(myTilesIndexes.get(i));
+	    }
+	    
+	    
+	    Collections.sort(myTiles);
+		placeImages1(downHandArea, createTilesImages(myTiles, false));
+		placeImages1(downWallArea, createWallTiles(myWallNumber, 1));
+		placeImages1(downMeldArea, createMeldTiles(myChiTiles,myPengTiles,myGangTiles, 0));
+
+		placeImages1(downCastArea, createCastTiles(myCastTiles, 0));
+
+		placeImages1(selectedArea, ImmutableList.<Image>of());
+		
+
+		
+	    placeImages2(rightHandArea, createBackTiles(tileNumberOfOpponent1,2));
+		placeImages2(rightWallArea, createWallTiles(wallNumberOfOpponent1, 2));
+		placeImages2(rightMeldArea, createMeldTiles(chiTilesOfOpponent1,pengTilesOfOpponent1,gangTilesOfOpponent1, 1));
+		placeImages2(rightCastArea, createCastTiles(castTilesOfOpponent1, 1));
+		
+		
+	    placeImages1(upHandArea, createBackTiles(tileNumberOfOpponent2,1));
+		placeImages1(upWallArea, createWallTiles(wallNumberOfOpponent2, 1));
+		placeImages1(upMeldArea, createMeldTiles(chiTilesOfOpponent2,pengTilesOfOpponent2,gangTilesOfOpponent2, 2));
+		placeImages1(upCastArea, createCastTiles(castTilesOfOpponent2, 2));
+
+		
+	    placeImages2(leftHandArea, createBackTiles(tileNumberOfOpponent3,2));
+		placeImages2(leftWallArea, createWallTiles(wallNumberOfOpponent3, 2));
+		placeImages2(leftMeldArea, createMeldTiles(chiTilesOfOpponent3,pengTilesOfOpponent3,gangTilesOfOpponent3, 3));
+		placeImages2(leftCastArea, createCastTiles(castTilesOfOpponent3, 3));
+		
+		if(specialTile!=null && !flagForSpecialTile)
+		placeSpecialTile(specialTileArea, turnTileToImage(specialTile));	
+		
+		chiButton.setEnabled(false);
+		pengButton.setEnabled(false);
+		huButton.setEnabled(false);
+		skipButton.setEnabled(false);
+		
+		alertMahjongMessage(mahjongMessage, true);
+	}
+	
+	private void alertMahjongMessage(MahjongMessage mahjongMessage, boolean auto) {
 		switch (mahjongMessage) {
 		    case INVISIBLE_: {
 		    	return;
@@ -737,22 +816,41 @@ public class MahjongGraphics extends Composite implements View{
 		    	return;
 		    }
 		    case AUTO_CHI_CHECK_: {
+		    	Window.alert("auto chi check in graphics");
 		    	presenter.autoChiCheck();
 		    	return;
 		    }
 		    case WAIT_HU_CHOICE_: {
+		    	if(!auto) {
 		    	huButton.setEnabled(true);
 		    	skipButton.setEnabled(true);
+		    	}else {
+		    	  huButton.setEnabled(false);
+		    	  skipButton.setEnabled(false);
+		    	  presenter.waitForHuChoice(true);
+		    	}
 		    	return;
 		    }
 		    case WAIT_PENG_CHOICE_: {
+		    	if(!auto) {
 		    	pengButton.setEnabled(true);
 		    	skipButton.setEnabled(true);
+		    	}else {
+			    	  pengButton.setEnabled(false);
+			    	  skipButton.setEnabled(false);
+			    	  presenter.waitForPengChoice(true);
+		    	}
 		    	return;
 		    }
 		    case WAIT_CHI_CHOICE_: {
+		    	if(!auto) {
 		    	chiButton.setEnabled(true);
 		    	skipButton.setEnabled(true);
+		    	}else {
+			    	  chiButton.setEnabled(false);
+			    	  skipButton.setEnabled(false);
+			    	  presenter.waitForChiChoice(true);
+		    	}
 		    	return;
 		    }
 		    //for test
@@ -808,6 +906,143 @@ public class MahjongGraphics extends Composite implements View{
 		}
 	} 
 	
+	@Override 
+	public void chooseCastTileAuto(List<Tile> selectedCastTile, List<Tile> remainingTiles,
+			List<Integer> selectedCastTileIndex, List<Integer> remainingTileIndexes) {
+		Window.alert("Cast Auto Choose1");
+		for(int i=0;i<remainingTileIndexes.size();i++) {
+			remainingTiles.get(i).setIndex(remainingTileIndexes.get(i));
+		}
+		Window.alert("Cast Auto Choose1-A");
+	    for(int i=0;i<remainingTiles.size();i++) {
+	    	remainingTileIndexes.set(i, remainingTiles.get(i).getIndex());
+	    }
+	    Window.alert("Cast Auto Choose1-B");
+	    if(selectedCastTile.size() != 0)
+		selectedCastTile.get(0).setIndex(selectedCastTileIndex.get(0));
+		Collections.sort(remainingTiles);
+		Window.alert("Cast Auto Choose1-C");
+		enableClickForCast = true;
+	    placeImages1(downHandArea, createTilesImages(remainingTiles, false));
+        placeImages1(selectedArea, createTilesImages(selectedCastTile, false));
+        Window.alert("Cast Auto Choose1-D");
+        Window.alert(String.valueOf(selectedCastTile.size()));
+		if(selectedCastTile.size() == 1) {
+			Window.alert("Cast Auto Choose1-E");
+			enableClickForCast = false;
+			presenter.finishedSelectingCastTile();
+		}
+		int size = remainingTiles.size();
+		Random rand = new Random();
+		int castIndex = rand.nextInt(size);
+		Window.alert("Cast Auto Choose2");
+		presenter.castTileSelectedAuto(remainingTiles.get(castIndex), castIndex);
+	}
+	
+	@Override
+	public void choosePengTilesAuto(List<Tile> selectedPengTiles, List<Tile> remainingTiles,
+			List<Integer> selectedPengTileIndexes, List<Integer> remainingTileIndexes, Tile cast, Tile specTile) {
+		Window.alert("Peng Auto Choose1");
+		for(int i=0;i<remainingTileIndexes.size();i++) {
+			remainingTiles.get(i).setIndex(remainingTileIndexes.get(i));
+		}
+		Collections.sort(remainingTiles);
+		for(int i=0;i<remainingTiles.size();i++) {
+			remainingTileIndexes.set(i, remainingTiles.get(i).getIndex());
+		}
+		for(int i=0;i<selectedPengTileIndexes.size();i++) {
+			selectedPengTiles.get(i).setIndex(selectedPengTileIndexes.get(i));
+		}
+		Collections.sort(selectedPengTiles);
+		for(int i=0;i<selectedPengTiles.size();i++) {
+			selectedPengTileIndexes.set(i, selectedPengTiles.get(i).getIndex());
+		}
+		enableClickForPeng = true;
+	    placeImages1(downHandArea, createTilesImages(remainingTiles, false));
+	    placeImages1(selectedArea, createTilesImages(selectedPengTiles, false));
+	    
+		if(selectedPengTiles.size() == 2) {
+			enableClickForPeng = false;
+			presenter.finishedSelectingPengTiles();
+		}
+		List<Tile> _peng = Lists.newArrayList();
+		List<Integer> _pengIndex = Lists.newArrayList();
+		int index = 0;
+		int num = 0;
+		for(Tile tile : remainingTiles) {
+		  if (tile.equals(cast) || MahjongLogicAnalysis.isSpecialTile(tile, specTile)) { 	
+		    _peng.add(tile);
+		    _pengIndex.add(index);
+		    num ++;
+		  }
+		  if(num == 2) {
+		    break;
+		  }
+		  index ++;
+		}
+		Window.alert("Peng Auto Choose2");
+		Window.alert(""+_peng.size());
+		Window.alert(""+_pengIndex.size());
+		presenter.pengTilesSelectedAuto(_peng, _pengIndex);
+	}
+	
+	@Override	
+	public void chooseChiTilesAuto(List<Tile> selectedChiTiles, List<Tile> remainingTiles,
+			List<Integer> selectedChiTileIndexes, List<Integer> remainingTileIndexes, Tile cast, Tile specTile) {
+		Window.alert("Chi Auto Choose1");
+		for(int i=0;i<remainingTileIndexes.size();i++) {
+			remainingTiles.get(i).setIndex(remainingTileIndexes.get(i));
+		}
+		Window.alert("Chi Auto 111");
+		Collections.sort(remainingTiles);
+		for(int i=0;i<remainingTiles.size();i++) {
+			remainingTileIndexes.set(i, remainingTiles.get(i).getIndex());
+		}
+		Window.alert("Chi Auto 222");
+		for(int i=0;i<selectedChiTileIndexes.size();i++) {
+			selectedChiTiles.get(i).setIndex(selectedChiTileIndexes.get(i));
+		}	
+		Window.alert("Chi Auto 333");
+		Collections.sort(selectedChiTiles);
+		for(int i=0;i<selectedChiTiles.size();i++) {
+			selectedChiTileIndexes.set(i, selectedChiTiles.get(i).getIndex());
+		}
+		Window.alert("Chi Auto 444");	
+		enableClickForChi = true;
+	    placeImages1(downHandArea, createTilesImages(remainingTiles, false));
+	    placeImages1(selectedArea, createTilesImages(selectedChiTiles, false));
+	    Window.alert("Chi Auto 555");
+		if(selectedChiTiles.size() == 2) {
+			enableClickForChi = false;
+			presenter.finishedSelectingChiTiles();
+		}
+		List<Tile> _chi = null;
+		List<Integer> _chiIndex = null;
+		int index = 0;
+		int num = 0;
+		int size = remainingTiles.size();
+		boolean find = false;
+		for(int i=0; i<(size-1); i++) {
+		  _chi = Lists.newArrayList();
+		  _chiIndex = Lists.newArrayList();
+		  _chi.add(remainingTiles.get(i));
+		  _chiIndex.add(i);
+		  for(int j=i+1; j<size; j++) {
+			_chi.add(remainingTiles.get(j));
+			_chiIndex.add(j);
+		    if(MahjongLogicAnalysis.isChiFormed(cast, specTile, _chi)) {
+		      find = true;
+		      break;
+		    }
+		  }
+		  if(find) {
+		    break;
+		  }
+		}
+		Window.alert("Chi Auto Choose2");
+		presenter.chiTilesSelectedAuto(_chi, _chiIndex);
+	}
+	
 	@Override
 	public void chooseCastTile(List<Tile> selectedCastTile, List<Tile> remainingTiles,
 			List<Integer> selectedCastTileIndex, List<Integer> remainingTileIndexes) {		
@@ -821,8 +1056,8 @@ public class MahjongGraphics extends Composite implements View{
 		selectedCastTile.get(0).setIndex(selectedCastTileIndex.get(0));
 		Collections.sort(remainingTiles);
 		enableClickForCast = true;
-	    placeImages1(downHandArea, createTilesImages(remainingTiles));
-        placeImages1(selectedArea, createTilesImages(selectedCastTile));
+	    placeImages1(downHandArea, createTilesImages(remainingTiles, true));
+        placeImages1(selectedArea, createTilesImages(selectedCastTile, true));
 		if(selectedCastTile.size() == 1) {
 			enableClickForCast = false;
 			presenter.finishedSelectingCastTile();
@@ -847,8 +1082,8 @@ public class MahjongGraphics extends Composite implements View{
 			selectedPengTileIndexes.set(i, selectedPengTiles.get(i).getIndex());
 		}
 		enableClickForPeng = true;
-	    placeImages1(downHandArea, createTilesImages(remainingTiles));
-	    placeImages1(selectedArea, createTilesImages(selectedPengTiles));
+	    placeImages1(downHandArea, createTilesImages(remainingTiles, true));
+	    placeImages1(selectedArea, createTilesImages(selectedPengTiles, true));
 	    
 		if(selectedPengTiles.size() == 2) {
 			enableClickForPeng = false;
@@ -874,8 +1109,8 @@ public class MahjongGraphics extends Composite implements View{
 			selectedChiTileIndexes.set(i, selectedChiTiles.get(i).getIndex());
 		}
 		enableClickForChi = true;
-	    placeImages1(downHandArea, createTilesImages(remainingTiles));
-	    placeImages1(selectedArea, createTilesImages(selectedChiTiles));
+	    placeImages1(downHandArea, createTilesImages(remainingTiles, true));
+	    placeImages1(selectedArea, createTilesImages(selectedChiTiles, true));
 		if(selectedChiTiles.size() == 2) {
 			enableClickForChi = false;
 			presenter.finishedSelectingChiTiles();

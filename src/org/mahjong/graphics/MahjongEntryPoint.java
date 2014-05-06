@@ -39,16 +39,24 @@ public class MahjongEntryPoint implements EntryPoint{
 
 		final ListBox playerSelected = new ListBox();
 		playerSelected.addItem("East");
-		playerSelected.addItem("North");
-		playerSelected.addItem("West");
-		playerSelected.addItem("South");
+		playerSelected.addItem("North"); // AI player
+		playerSelected.addItem("West"); // AI player
+		playerSelected.addItem("South"); // AI player
 		playerSelected.addItem("Viewer");
 		playerSelected.addChangeHandler(new ChangeHandler() {
 			@Override
 			public void onChange(ChangeEvent event) {
 				int selectedIndex = playerSelected.getSelectedIndex();
-				String playerId = selectedIndex == 4 ? GameApi.VIEWER_ID
-					: container.getPlayerIds().get(selectedIndex);
+				//String playerId = selectedIndex == 4 ? GameApi.VIEWER_ID
+				//	: container.getPlayerIds().get(selectedIndex);
+				String playerId = null;
+				if(selectedIndex == 4) {
+			      playerId = GameApi.VIEWER_ID;
+				}else if(selectedIndex == 0) {
+				  playerId = container.getPlayerIds().get(selectedIndex);
+				}else {
+				  playerId = "10" + selectedIndex;
+				}
 				container.updateUi(playerId);
 			}
 		});

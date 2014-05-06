@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
+import com.google.gwt.user.client.Window;
 
 import org.game_api.GameApi.*;
 
@@ -41,7 +42,7 @@ public class MahjongLogic {
 	
 	private static final String CHI = "chi";
 	private static final String PENG = "peng";
-	//private static final String GANG = "gang";
+	private static final String GANG = "gang";
 	private static final String CAST = "cast";
 	
 	private static final String YES = "yes";
@@ -113,7 +114,7 @@ public class MahjongLogic {
 			return getInitialMoveTwo(playerIds);
 		}
 		
-		MahjongState lastState = gameApiStateToMahjongState(lastApiState, Position.values()[playerIds.indexOf(lastMovePlayerId)], playerIds/*, null*/);
+		MahjongState lastState = gameApiStateToMahjongState(lastApiState, Position.values()[playerIds.indexOf(lastMovePlayerId)], playerIds);
 		
 		if(lastMove.contains(new Set(IS_FETCH, YES))){
 			return declareFetchMove(lastState);
@@ -326,33 +327,29 @@ public class MahjongLogic {
 		List<Integer> chiByN = (List<Integer>)  gameApiState.get(CHI_BY_N);
 		List<Integer> pengByN = (List<Integer>)  gameApiState.get(PENG_BY_N);
 		List<Integer> gangByN = (List<Integer>)  gameApiState.get(GANG_BY_N);
-		
 		List<Integer> wallEast = (List<Integer>)  gameApiState.get(WALL_EAST);
 		List<Integer> wallSouth = (List<Integer>)  gameApiState.get(WALL_SOUTH);
 		List<Integer> wallNorth = (List<Integer>)  gameApiState.get(WALL_NORTH);
 		List<Integer> wallWest = (List<Integer>)  gameApiState.get(WALL_WEST);
-		
 		List<Integer> castByE = (List<Integer>) gameApiState.get(CAST_BY_E);
 		List<Integer> castByN = (List<Integer>) gameApiState.get(CAST_BY_N);
 		List<Integer> castByW = (List<Integer>) gameApiState.get(CAST_BY_W);
 		List<Integer> castByS = (List<Integer>) gameApiState.get(CAST_BY_S);
-		
 		Integer specialTile = (Integer) gameApiState.get(SPECIAL_TILE);
 		Integer wallIndex = (Integer) gameApiState.get(WALL_INDEX);
-		
-		Integer nextTurnId = (Integer) gameApiState.get(NEXT_TURN_OF_CAST_PLAYER);
+		String nextTurnId = (String) gameApiState.get(NEXT_TURN_OF_CAST_PLAYER);
 		Position nextTurnOfPosition;
 		if(nextTurnId == null) 
 			nextTurnOfPosition = null;
 		else
-			nextTurnOfPosition = Position.values()[playerIds.indexOf(nextTurnId.intValue())];
+			nextTurnOfPosition = Position.values()[playerIds.indexOf(nextTurnId)];
 		
-		Integer playerIssueId = (Integer) gameApiState.get(PLAYER_WHO_ISSUE_CAST);
+		String playerIssueId = (String) gameApiState.get(PLAYER_WHO_ISSUE_CAST);
 		Position playerWhoIssueCast;
 		if(playerIssueId == null)
 			playerWhoIssueCast = null;
 		else
-			playerWhoIssueCast = Position.values()[playerIds.indexOf(playerIssueId.intValue())];
+			playerWhoIssueCast = Position.values()[playerIds.indexOf(playerIssueId)];
 		
 		return new MahjongState(
 				turnOfPosition,
