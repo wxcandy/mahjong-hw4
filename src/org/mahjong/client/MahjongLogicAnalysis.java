@@ -15,6 +15,7 @@ import com.google.common.collect.ImmutableList;
 import org.mahjong.client.MahjongState;
 import org.mahjong.client.Tile;
 
+import com.google.gwt.user.client.Window;
 /**
  * This class is library used to analyze the mathematical logic for the mahjong game
  * such as is_hu_form, is_peng_form, is_gang_form, is_chi_form and so on.
@@ -111,11 +112,10 @@ public class MahjongLogicAnalysis {
 			}
 			return false;
 		}
-	
 		for(int i = 0;i<length;i++) {
 			for(int j = i+1;j<length;j++) {
-				if(isChiMeld(tileNumWithSameDomain.get(i),
-						tileNumWithSameDomain.get(j), castTileNum)) {
+				boolean test = isChiMeld(tileNumWithSameDomain.get(i),tileNumWithSameDomain.get(j), castTileNum);
+				if(test) {
 					return true;
 				}
 			}
@@ -124,7 +124,10 @@ public class MahjongLogicAnalysis {
 	}
 	
 	public static boolean isChiMeld(int one, int two, int three) {
-		List<Integer> chiMeld = ImmutableList.<Integer>of(one, two, three);
+		List<Integer> chiMeld = Lists.newArrayList();
+		chiMeld.add(one);
+		chiMeld.add(two);
+		chiMeld.add(three);
 		Collections.sort(chiMeld);
 		int diff1 = chiMeld.get(1) - chiMeld.get(0);
 		int diff2 = chiMeld.get(2) - chiMeld.get(1);

@@ -148,6 +148,8 @@ public class MahjongPresenter {
 		
 		public void chooseChiTilesAuto(List<Tile> selectedChiTiles, List<Tile> remainingTiles,
 				List<Integer> selectedChiTileIndexes, List<Integer> remainingTileIndexes, Tile cast, Tile specTile);
+		
+		public void displayGameInfo(String winner);
 	}
 	
 	private final MahjongLogic mahjongLogic = new MahjongLogic();
@@ -163,6 +165,7 @@ public class MahjongPresenter {
 	private List<Integer> selectedPengTileIndexes;
 	private List<Tile> selectedChiTiles;
 	private List<Integer> selectedChiTileIndexes;
+	private String myPlayerId;
 	
 	public MahjongPresenter(View view, Container container) {
 		this.view = view;
@@ -173,6 +176,7 @@ public class MahjongPresenter {
 	public void updateUI(UpdateUI updateUI) {
 		List<String> playerIds = updateUI.getPlayerIds();
 		String yourPlayerId = updateUI.getYourPlayerId();
+		myPlayerId = yourPlayerId;
 		int yourPlayerIndex = updateUI.getPlayerIndex(yourPlayerId);
 		selectedCastTile = Lists.newArrayList();
 		selectedCastTileIndex = Lists.newArrayList();
@@ -346,10 +350,8 @@ public class MahjongPresenter {
 	   
 	   MahjongMessage mahjongMessage = getMahjongMessage();
 	   boolean auto = false;
-	   Window.alert(mahjongMessage.toString());
 	   //This path is used for AI player
 	   if(updateUI.isAiPlayer()) {
-		   Window.alert("AI udpdate board1");
 		   view.setPlayerStateAi(
 				   mahjongState.getOneOfFourTile(opponent1).size(),
 				   getTileListFromIndexList(mahjongState.getOneOfFourChi(opponent1)),
@@ -378,7 +380,6 @@ public class MahjongPresenter {
 				   mahjongState.getTiles().get(mahjongState.getSpecialTile()).get(),
 				   mahjongState.getOneOfFourTile(myP),
 				   mahjongMessage);
-		   Window.alert("AI udpdate board2");
 		  auto = true;
 	   }else {
 	    
@@ -419,37 +420,31 @@ public class MahjongPresenter {
 		 || mahjongMessage.equals(MahjongMessage.WAIT_CHI_CHOICE_)
 		 || mahjongMessage.equals(MahjongMessage.WAIT_HU_CHOICE_)
 		 || mahjongMessage.equals(MahjongMessage.WAIT_PENG_CHOICE_)) {
-		   Window.alert("Auto");
 		   return;
 	   }
 	   
 	   if(isMyTurn()) {
 		   if(mahjongState.isChi()) {
-			   Window.alert("111111");
 			   checkIfChiMove();
 		   }else if(mahjongState.isPeng()) {
-			   Window.alert("222222");
 			   checkIfPengMove();
 		   }else if(mahjongState.isHu()) {
-			   Window.alert("333333");
 			   checkIfHuMove();
 		   }else if(canDelcareHuMove()) {
-			   Window.alert("444444");
 			   declareHuMove();
 		   }else if(canDeclarePengMove()) {
-			   Window.alert("Choose Peng");
-			   Window.alert(String.valueOf(auto));
+			   if(auto) {
+			     Window.alert("I begin to choose tiles to peng");
+			   }
 			   choosePengTiles(auto);
 		   }else if(canDeclareChiMove()) {
-			   Window.alert("Choose Chi");
-			   Window.alert(String.valueOf(auto));
+			   if(auto) {
+			     Window.alert("I begin to choose tiles to chi");
+			   }
 			   chooseChiTiles(auto);
 		   }else if(mahjongState.getOneOfFourTile(myP).size()%3 != 2) {
-			   Window.alert("Get a tile");
 			   declareFetch();
 		   }else{
-			   Window.alert("Choose Cast");
-			   Window.alert(String.valueOf(auto));
 			   chooseCastTile(auto);
 		   }
 	   }
@@ -482,17 +477,11 @@ public class MahjongPresenter {
 	 * Called by view only when view receives the message AUTO_CHI_CHECK_
 	 */
 	public void autoChiCheck() {
-		Window.alert("Auto chi check in presenter1");
 		check(isMyTurn() && mahjongState.isChiCheckStatus());
-		Window.alert("Auto chi check in presenter2");
 		List<Operation> operations = Lists.newArrayList();
 		operations.add(new SetTurn("-1"));
-		Window.alert("Auto chi check in presenter3");
-		//canChiCheck--stack overflow
 		operations.add(new Set("chiIsAllowed", MahjongLogicAnalysis.canChiCheck(mahjongState, myPosition.get())));
-		Window.alert("Auto chi check in presenter4");
 		List<Operation> chiCheckMove = mahjongLogic.declareAutoChiCheckMove(mahjongState, operations);
-		Window.alert("Arrive here");
 		container.sendMakeMove(chiCheckMove);
 	}
 	
@@ -505,6 +494,9 @@ public class MahjongPresenter {
 		List<Operation> operations = Lists.newArrayList();
 		operations.add(new SetTurn("-1"));
 		operations.add(new Set("choiceForHu", choice));
+		if(choice) {
+	      view.displayGameInfo("Player" + myPlayerId);
+		}
 		container.sendMakeMove(mahjongLogic.waitForHuChoice(mahjongState, operations));
 	}
 	
@@ -517,6 +509,7 @@ public class MahjongPresenter {
 		List<Operation> operations = Lists.newArrayList();
 		operations.add(new SetTurn("-1"));
 		operations.add(new Set("choiceForPeng", choice));
+		Window.alert("I decided to peng");
 		container.sendMakeMove(mahjongLogic.waitForPengChoice(mahjongState, operations));
 	}
 	
@@ -529,6 +522,7 @@ public class MahjongPresenter {
 		List<Operation> operations = Lists.newArrayList();
 		operations.add(new SetTurn("-1"));
 		operations.add(new Set("choiceForChi", choice));
+		Window.alert("I decided to chi");
 		container.sendMakeMove(mahjongLogic.waitForChiChoice(mahjongState, operations));
 	}
 	
@@ -545,10 +539,11 @@ public class MahjongPresenter {
 		  view.choosePengTiles(selectedPengTiles, mahjongLogic.subtract_(getMyTiles(), selectedPengTiles),
 			  selectedPengTileIndexes, mahjongLogic.subtract_(mahjongState.getOneOfFourTile(myPosition.get()), selectedPengTileIndexes));
 		}else {
-		  view.choosePengTilesAuto(selectedPengTiles, mahjongLogic.subtract_(getMyTiles(), selectedPengTiles),
-		      selectedPengTileIndexes, mahjongLogic.subtract_(mahjongState.getOneOfFourTile(myPosition.get()), 
-		    		  selectedPengTileIndexes), mahjongState.getTiles().get((mahjongState.getCast().get().getValue())).get(), 
-		    		  mahjongState.getTiles().get(mahjongState.getSpecialTile()).get());
+		  view.choosePengTilesAuto(selectedPengTiles, 
+		      mahjongLogic.subtract_(getMyTiles(), selectedPengTiles),
+		      selectedPengTileIndexes, mahjongLogic.subtract_(mahjongState.getOneOfFourTile(myPosition.get()), selectedPengTileIndexes), 
+		      mahjongState.getTiles().get((mahjongState.getCast().get().getValue())).get(), 
+		      mahjongState.getTiles().get(mahjongState.getSpecialTile()).get());
 		}
 	}
 	
@@ -668,13 +663,11 @@ public class MahjongPresenter {
 	 * @param castTileNum
 	 */
 	public void castTileSelectedAuto(Tile castTile, int castTileNum) {
-		Window.alert("Cast Auto Selected 1");
 		check(isMyTurn());
 		if(selectedCastTile.size()==0) {
 			selectedCastTile.add(castTile);
 			selectedCastTileIndex.add(castTileNum);
 		}
-		Window.alert("Cast Auto Selected 2");
 		chooseCastTile(true);
 	}
 	
@@ -688,7 +681,6 @@ public class MahjongPresenter {
 		operations.add(new SetTurn("-1"));
 		operations.add(new Set("isPeng","yes"));
 		operations.add(new Set("peng",ImmutableList.of(selectedPengTileIndexes.get(0),selectedPengTileIndexes.get(1))));
-		Window.alert("Select peng tile finished 11111111");
 		List<Operation> declarePengMove_ = mahjongLogic.declarePengMove(mahjongState, operations);
 		container.sendMakeMove(declarePengMove_);
 	}
@@ -702,7 +694,6 @@ public class MahjongPresenter {
 		operations.add(new SetTurn("-1"));
 		operations.add(new Set("isChi", "yes"));
 		operations.add(new Set("chi", ImmutableList.of(selectedChiTileIndexes.get(0),selectedChiTileIndexes.get(1))));
-		Window.alert("Chi has finished ???");
 		List<Operation> declareChiMove_ = mahjongLogic.declareChiMove(mahjongState, operations);
 		container.sendMakeMove(declareChiMove_);
 	}
@@ -715,9 +706,7 @@ public class MahjongPresenter {
 		List<Operation> operations = Lists.newArrayList();
 		operations.add(new SetTurn("-1"));
 		operations.add(new Set("cast", selectedCastTileIndex.get(0)));
-		Window.alert("Cast 11111111111111 in Preseneter");
 		List<Operation> doCastMove_ = mahjongLogic.doCastMove(mahjongState, operations);
-		Window.alert("Cast 22222222222222 in Preseneter");
 		container.sendMakeMove(doCastMove_);
 	}
 	

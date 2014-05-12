@@ -400,13 +400,9 @@ public final class GameApi {
     public String getYourPlayerId() {
       return yourPlayerId;
     }
-
-//  public boolean isAiPlayer() {
-//      return yourPlayerId.equals(AI_PLAYER_ID);
-//  }
     
     public boolean isAiPlayer() {
-      return yourPlayerId.equals("101") || yourPlayerId.equals("102") || yourPlayerId.equals("103");
+      return yourPlayerId.equals(AI_PLAYER_ID);
     }
 
     public boolean isViewer() {

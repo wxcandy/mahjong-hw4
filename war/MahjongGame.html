@@ -7,33 +7,32 @@
     <script type="text/javascript" language="javascript" src="mahjong_game/mahjong_game.nocache.js"></script>
     <style>
   .imgContainerUp {
-    width: 16px;
-    height: 20px;
+    overflow: hidden;
+    width: 28px;
+    height: 36px;
   }
   .imgContainerLeft {
-    width: 20px;
-    height: 16px;
-  }
-  .imgContainerSpec {
-    width: 24px;
+  overflow: hidden;
+    width: 36px;
     height: 28px;
   }
-  .image {
-    width: 29px;
-    height: 30px;
-  }
-  .image2 {
-    width: 29px;
-    height: 30px;
+  .gameInfoStyle {
+    font-size: 2.0em;
+    font-family: "Times New Roman", Georgia, Serif;
+    font-weight: bold;
   }
     </style>
   </head>
   <body>
-    <div id="mainDiv" width="40" height="50" ></div>
+     <div id="changeLanguage">
+      <span><a href="javascript:window.changeLanguage('1')">中文</a></span>
+      <span><a href="javascript:window.changeLanguage('2')">English</a></span>
+     </div>
+    <div id="mainDiv" width="840" height="840" ></div>
     <script>
    function scaleBody() {
-   var myGameWidth = 460;
-   var myGameHeight = 920;
+   var myGameWidth = 840;
+   var myGameHeight = 840;
    var scaleX = window.innerWidth / myGameWidth;
    var scaleY = window.innerHeight / myGameHeight;
    var scale = Math.max(scaleX, scaleY);
