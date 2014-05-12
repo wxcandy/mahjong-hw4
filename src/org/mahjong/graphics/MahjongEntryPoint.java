@@ -32,23 +32,7 @@ public class MahjongEntryPoint implements EntryPoint{
         new MahjongPresenter(mahjongGraphics, container);
   
     RootPanel.get("mainDiv").add(mahjongGraphics);
-    methodExport(this);
     container.sendGameReady();
     
-  }
-  
-  public native void methodExport(MahjongEntryPoint entryPoint) /*-{
-    var a = entryPoint;
-    $wnd.changeLanguage = a.@org.mahjong.graphics.MahjongEntryPoint::changeLanguage(Ljava/lang/String;);
-  }-*/;
-  
-  public void changeLanguage(String type) {
-    String type_ = type;
-    //Chinese
-    if(type_.equals("1")) {
-    	
-    }else if(type_.equals("2")) {//English
-    	
-    }
   }
 }

@@ -433,14 +433,8 @@ public class MahjongPresenter {
 		   }else if(canDelcareHuMove()) {
 			   declareHuMove();
 		   }else if(canDeclarePengMove()) {
-			   if(auto) {
-			     Window.alert("I begin to choose tiles to peng");
-			   }
 			   choosePengTiles(auto);
 		   }else if(canDeclareChiMove()) {
-			   if(auto) {
-			     Window.alert("I begin to choose tiles to chi");
-			   }
 			   chooseChiTiles(auto);
 		   }else if(mahjongState.getOneOfFourTile(myP).size()%3 != 2) {
 			   declareFetch();
@@ -495,7 +489,7 @@ public class MahjongPresenter {
 		operations.add(new SetTurn("-1"));
 		operations.add(new Set("choiceForHu", choice));
 		if(choice) {
-	      view.displayGameInfo("Player" + myPlayerId);
+	      view.displayGameInfo(myPlayerId);
 		}
 		container.sendMakeMove(mahjongLogic.waitForHuChoice(mahjongState, operations));
 	}
@@ -509,7 +503,6 @@ public class MahjongPresenter {
 		List<Operation> operations = Lists.newArrayList();
 		operations.add(new SetTurn("-1"));
 		operations.add(new Set("choiceForPeng", choice));
-		Window.alert("I decided to peng");
 		container.sendMakeMove(mahjongLogic.waitForPengChoice(mahjongState, operations));
 	}
 	
@@ -522,7 +515,6 @@ public class MahjongPresenter {
 		List<Operation> operations = Lists.newArrayList();
 		operations.add(new SetTurn("-1"));
 		operations.add(new Set("choiceForChi", choice));
-		Window.alert("I decided to chi");
 		container.sendMakeMove(mahjongLogic.waitForChiChoice(mahjongState, operations));
 	}
 	

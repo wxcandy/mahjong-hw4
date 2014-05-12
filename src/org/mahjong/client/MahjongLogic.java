@@ -734,11 +734,8 @@ public class MahjongLogic {
      * @return lastMove of Hu
      */
     public List<Operation> checkIfHuMove(MahjongState state){
-    	Window.alert("Check If Hu Move0");
     	check(state.isHu());
     	check(state.isHuStatus());
-    	
-    	Window.alert("Check If Hu Move1");
     	
     	Position turnOfPosition = state.getTurn();
     	ImmutableList<Integer> currentTiles = state.getOneOfFourTile(turnOfPosition);
@@ -748,7 +745,6 @@ public class MahjongLogic {
     	Optional<Tile>  castValue;
     	Optional<Tile>  specialTile = state.getTiles().get(state.getSpecialTile());
     	List<Optional<Tile>> huTiles = new ArrayList<Optional<Tile>>();
-    	Window.alert("Check If Hu Move2");
     	
     	for(int i=0;i<currentTiles.size();i++){
     		huTiles.add(state.getTiles().get(currentTiles.get(i).intValue()));
@@ -760,7 +756,6 @@ public class MahjongLogic {
     		castValue = Optional.fromNullable(null);
     	}
     	
-    	Window.alert("Check If Hu Move3");
     	List<Integer> chi = state.getOneOfFourChi(turnOfPosition);
         List<Integer> peng = state.getOneOfFourPeng(turnOfPosition);
         List<Integer> gang = state.getOneOfFourGang(turnOfPosition);
@@ -777,7 +772,6 @@ public class MahjongLogic {
     		  pengTiles.add(state.getTiles().get(peng.get(i).intValue()));
     	  }
     	}
-    	Window.alert("Check If Hu Move4");
     	List<Optional<Tile>> gangTiles = new ArrayList<Optional<Tile>>();
     	if(gang != null){
     	  for(int i=0;i<gang.size();i++) {
@@ -790,9 +784,7 @@ public class MahjongLogic {
     	operations.add(new SetTurn(state.getPlayerId(turnOfPosition)));
     	operations.add(new Delete(IS_HU_STATUS));
     	
-    	Window.alert("Check If Hu Move5");
     	if(MahjongLogicAnalysis.canHuCheck(state, turnOfPosition)){
-    		Window.alert("The game has finished");
     		operations.add(new EndGame(state.getPlayerId(turnOfPosition)));
     	}
     	else{

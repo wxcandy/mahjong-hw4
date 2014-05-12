@@ -150,6 +150,11 @@ public class MahjongGraphics extends Composite implements View{
 		
 		absolutePanel.setPixelSize(840, 840);
 		
+		chiButton.setText(LanguageIngredients.languageIngredients.chi());
+		pengButton.setText(LanguageIngredients.languageIngredients.peng());
+		huButton.setText(LanguageIngredients.languageIngredients.hu());
+		skipButton.setText(LanguageIngredients.languageIngredients.skip());
+		
 		//initializePieceMoving(ai);
 		
 		/*
@@ -452,7 +457,7 @@ public class MahjongGraphics extends Composite implements View{
 	
 	@Override
 	public void displayGameInfo(String winner) {
-	  Label gameInfo = new Label(winner + " wins the match!");	
+	  Label gameInfo = new Label(LanguageIngredients.languageIngredients.player() + winner + LanguageIngredients.languageIngredients.wins());	
 	  gameInfo.setStyleName("gameInfoStyle");
 	  gameInfoArea.add(gameInfo);
 	}
@@ -839,7 +844,6 @@ public class MahjongGraphics extends Composite implements View{
 		    	}else {
 		    	  huButton.setEnabled(false);
 		    	  skipButton.setEnabled(false);
-		    	  Window.alert("Wait for hu choice");
 		    	  presenter.waitForHuChoice(true);
 		    	}
 		    	return;
@@ -851,7 +855,6 @@ public class MahjongGraphics extends Composite implements View{
 		    	}else {
 			    	  pengButton.setEnabled(false);
 			    	  skipButton.setEnabled(false);
-			    	  Window.alert("Wait for peng choice");
 			    	  presenter.waitForPengChoice(true);
 		    	}
 		    	return;
@@ -863,7 +866,6 @@ public class MahjongGraphics extends Composite implements View{
 		    	}else {
 			    chiButton.setEnabled(false);
 			    skipButton.setEnabled(false);
-			    Window.alert("Wait for chi choice");
 			    presenter.waitForChiChoice(true);
 		    	}
 		    	return;
@@ -950,7 +952,6 @@ public class MahjongGraphics extends Composite implements View{
 	@Override
 	public void choosePengTilesAuto(List<Tile> selectedPengTiles, List<Tile> remainingTiles,
 			List<Integer> selectedPengTileIndexes, List<Integer> remainingTileIndexes, Tile cast, Tile specTile) {
-		Window.alert("peng 1");
 		for(int i=0;i<remainingTileIndexes.size();i++) {
 			remainingTiles.get(i).setIndex(remainingTileIndexes.get(i));
 		}
@@ -968,9 +969,7 @@ public class MahjongGraphics extends Composite implements View{
 		enableClickForPeng = true;
 	    placeImages1(downHandArea, createTilesImages(remainingTiles, false));
 	    placeImages1(selectedArea, createTilesImages(selectedPengTiles, false));
-	    Window.alert("peng 2");
 		if(selectedPengTiles.size() == 2) {
-			Window.alert("peng 4");
 			enableClickForPeng = false;
 			presenter.finishedSelectingPengTiles();
 			return;
@@ -988,14 +987,12 @@ public class MahjongGraphics extends Composite implements View{
 		    break;
 		  }
 		}
-		Window.alert("peng 3");
 		presenter.pengTilesSelectedAuto(_peng, _pengIndex);
 	}
 	
 	@Override	
 	public void chooseChiTilesAuto(List<Tile> selectedChiTiles, List<Tile> remainingTiles,
 			List<Integer> selectedChiTileIndexes, List<Integer> remainingTileIndexes, Tile cast, Tile specTile) {
-		Window.alert("chi 1");
 		for(int i=0;i<remainingTileIndexes.size();i++) {
 			remainingTiles.get(i).setIndex(remainingTileIndexes.get(i));
 		}
@@ -1013,9 +1010,7 @@ public class MahjongGraphics extends Composite implements View{
 		enableClickForChi = true;
 	    placeImages1(downHandArea, createTilesImages(remainingTiles, false));
 	    placeImages1(selectedArea, createTilesImages(selectedChiTiles, false));
-	    Window.alert("chi 2");
 		if(selectedChiTiles.size() == 2) {
-			Window.alert("chi 4");
 			enableClickForChi = false;
 			presenter.finishedSelectingChiTiles();
 			return;
@@ -1041,7 +1036,6 @@ public class MahjongGraphics extends Composite implements View{
 		    break;
 		  }
 		}
-		Window.alert("chi 3");
 		presenter.chiTilesSelectedAuto(_chi, _chiIndex);
 	}
 	

@@ -87,10 +87,10 @@
       <g:VerticalPanel width="170px">
       <g:HorizontalPanel height="71px"/>
       <g:HorizontalPanel height="28px">
-      <g:Button height="28px" width="40px" ui:field="chiButton" text="chi"/>
-      <g:Button height="28px" width="40px" ui:field="pengButton" text="peng"/>
-      <g:Button height="28px" width="40px" ui:field="huButton"  text="hu"/>
-      <g:Button height="28px" width="40px" ui:field="skipButton" text="skip"/>
+      <g:Button height="28px" width="40px" ui:field="chiButton"/>
+      <g:Button height="28px" width="40px" ui:field="pengButton"/>
+      <g:Button height="28px" width="40px" ui:field="huButton"/>
+      <g:Button height="28px" width="40px" ui:field="skipButton"/>
       </g:HorizontalPanel>
       <g:HorizontalPanel height="71px"/>
       </g:VerticalPanel>
